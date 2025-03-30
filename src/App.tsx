@@ -17,6 +17,10 @@ const App: React.FC = () => {
     setShowWallet(true);
   };
 
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
       {!showWallet ? (
@@ -60,7 +64,47 @@ const App: React.FC = () => {
                   </svg>
                 </button>
               </div>
-              <div className="border-t border-white/10 pt-12">
+
+              {/* Wallet Address Section */}
+              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 mb-8">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-semibold text-white">Wallet Address</h2>
+                  <button
+                    onClick={() => copyToClipboard(wallet?.account.address || '')}
+                    className="text-white/60 hover:text-white transition-colors duration-200"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                    </svg>
+                  </button>
+                </div>
+                <p className="text-white/80 font-mono text-sm break-all">{wallet?.account.address}</p>
+              </div>
+
+              {/* Recovery Phrase Section */}
+              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 mb-8">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-semibold text-white">Recovery Phrase</h2>
+                  <button
+                    onClick={() => copyToClipboard(wallet?.seedPhrase || '')}
+                    className="text-white/60 hover:text-white transition-colors duration-200"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                    </svg>
+                  </button>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {wallet?.seedPhrase.split(' ').map((word, index) => (
+                    <div key={index} className="bg-white/5 rounded-lg p-2 text-center">
+                      <span className="text-white/60 text-sm">{index + 1}.</span>
+                      <span className="text-white/80 ml-1">{word}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="border-t border-white/10 pt-8">
                 <CoinSelector />
               </div>
             </div>
