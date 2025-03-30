@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { generateAccount } from "../wallet-utils/AccountUtils";
 import AccountDetails from "./AccountDetails";
-import TransactionDetails from "./TransactionDetails";
 
 interface Account {
   privateKey: string;
@@ -9,16 +8,21 @@ interface Account {
   balance: string;
 }
 
-const AccountCreate: React.FC = () => {
+interface AccountCreateProps {
+  onAccountCreate: (account: { account: Account; seedPhrase: string }) => void;
+}
+
+const AccountCreate: React.FC<AccountCreateProps> = ({ onAccountCreate }) => {
   const [showInput, setShowInput] = useState(false);
   const [seedPhrase, setSeedPhrase] = useState("");
   const [account, setAccount] = useState<Account | null>(null);
 
   const createAccount = () => {
-    const account = generateAccount();// account object contains--> address, privateKey, seedPhrase, balance
-    console.log("Account created!", account);
-    setSeedPhrase(account.seedPhrase);
-    setAccount(account.account);
+    const accountData = generateAccount();
+    console.log("Account created!", accountData);
+    setSeedPhrase(accountData.seedPhrase);
+    setAccount(accountData.account);
+    onAccountCreate(accountData);
   };
 
   const showInputFunction = () => {
@@ -31,16 +35,16 @@ const AccountCreate: React.FC = () => {
 
   const handleSeedPhraseSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const account = generateAccount(seedPhrase);
-    console.log("Recovery", account);
-    setSeedPhrase(account.seedPhrase);
-    setAccount(account.account);
+    const accountData = generateAccount(seedPhrase);
+    console.log("Recovery", accountData);
+    setSeedPhrase(accountData.seedPhrase);
+    setAccount(accountData.account);
+    onAccountCreate(accountData);
   };
- 
 
   return (
     <div className="max-w-md mx-auto bg-white rounded-md shadow-md p-6">
-      <h2 className="text-2xl font-bold mb-4">Pixel Web3 Wallet on Polygon Mumbai</h2>
+      <h2 className="text-2xl font-bold mb-4">Pixel Web3 Wallet</h2>
       <button
         onClick={createAccount}
         className="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 shadow-lg shadow-purple-500/50 dark:shadow-lg dark:shadow-purple-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
@@ -72,18 +76,17 @@ const AccountCreate: React.FC = () => {
       )}
 
       <div>
-        <p className=" text-gray-900 font-medium">A/C Address: </p>
+        <p className="text-gray-900 font-medium">A/C Address: </p>
         <span className="text-gray-600 mt-2">{account?.address}</span>
       </div>
 
       <div>
-        <p className="text-gray-900  font-medium">Your 12 Phrase Mnemonic: </p>
+        <p className="text-gray-900 font-medium">Your 12 Phrase Mnemonic: </p>
         <span className="text-gray-600 text-normal">{seedPhrase}</span>
       </div>
 
       <hr />
       {account && <AccountDetails account={account} />}
-      {account && <TransactionDetails address={account.address} />}
     </div>
   );
 };
