@@ -87,31 +87,51 @@ const CoinSelector: React.FC = () => {
   };
 
   return (
-    <div className="relative">
-      <div className="bg-gray-50 rounded-lg p-4 shadow-sm">
-        <div className="flex items-center space-x-2 mb-2">
-          <select
-            value={selectedCoin}
-            onChange={(e) => setSelectedCoin(e.target.value as 'ethereum' | 'solana')}
-            className="bg-white border border-gray-300 rounded-md py-1.5 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-          >
-            <option value="ethereum">Ethereum</option>
-            <option value="solana">Solana</option>
-          </select>
-          <span className="text-xs text-gray-500">
+    <div className="space-y-8">
+      <div className="flex justify-center space-x-4">
+        <button
+          onClick={() => setSelectedCoin('ethereum')}
+          className={`px-8 py-4 rounded-xl font-medium transition-all duration-200 ${
+            selectedCoin === 'ethereum'
+              ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/25'
+              : 'bg-white/5 text-white/70 hover:bg-white/10 hover:text-white'
+          }`}
+        >
+          Ethereum
+        </button>
+        <button
+          onClick={() => setSelectedCoin('solana')}
+          className={`px-8 py-4 rounded-xl font-medium transition-all duration-200 ${
+            selectedCoin === 'solana'
+              ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/25'
+              : 'bg-white/5 text-white/70 hover:bg-white/10 hover:text-white'
+          }`}
+        >
+          Solana
+        </button>
+      </div>
+      
+      <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-semibold text-white">
+            {selectedCoin.charAt(0).toUpperCase() + selectedCoin.slice(1)} Price
+          </h2>
+          <span className="text-sm text-white/60">
             Updated: {formatTime(price[selectedCoin].last_updated)}
           </span>
         </div>
-        <div className="flex items-baseline space-x-2">
-          <span className="text-xl font-bold text-gray-900">
+        
+        <div className="flex items-baseline space-x-4 mb-6">
+          <span className="text-4xl font-bold text-white">
             {formatPrice(price[selectedCoin].usd)}
           </span>
-          <span className={`text-sm ${price[selectedCoin].usd_24h_change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+          <span className={`text-xl ${price[selectedCoin].usd_24h_change >= 0 ? 'text-green-400' : 'text-red-400'}`}>
             {price[selectedCoin].usd_24h_change >= 0 ? '↑' : '↓'} {Math.abs(price[selectedCoin].usd_24h_change).toFixed(2)}%
           </span>
         </div>
-        <div className="text-xs text-gray-500 mt-1">
-          Vol: {formatVolume(price[selectedCoin].usd_24h_vol)}
+        
+        <div className="text-sm text-white/60">
+          <span className="font-medium text-white/80">24h Volume:</span> {formatVolume(price[selectedCoin].usd_24h_vol)}
         </div>
       </div>
     </div>
